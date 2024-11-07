@@ -19,7 +19,7 @@ def project_detail(request, project_slug):
         category_list = Category.objects.filter(project=project)
         return render(request, 'budget/project-detail.html', {'project': project, 'expense_list': project.expenses.all(), 'category_list': category_list})
 
-    elif request.method == 'POST':
+    elif request.method == 'PATCH':
         form = ExpenseForm(request.POST)
 
         if form.is_valid():
@@ -53,7 +53,7 @@ class ProjectCreateView(CreateView):
     model = Project
 
     template_name = 'budget/add-project.html'
-    fields = ('name', 'amount')
+    fields = ('name', 'budget')
 
     def form_valid(self, form):
         self.object = form.save()
