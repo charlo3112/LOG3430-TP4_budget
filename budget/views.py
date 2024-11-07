@@ -53,7 +53,7 @@ class ProjectCreateView(CreateView):
     model = Project
 
     template_name = 'budget/add-project.html'
-    fields = ('name', 'budget')
+    fields = ('name', 'amount')
 
     def form_valid(self, form):
         self.object = form.save()
