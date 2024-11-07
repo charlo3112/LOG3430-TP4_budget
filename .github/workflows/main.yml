@@ -1,0 +1,33 @@
+name: Python package
+on: [push]
+jobs:
+    build:
+        runs-on: ubuntu-latest
+        steps:
+            - uses: actions/checkout@v2
+              with:
+                  fetch-depth: 0
+            - name: Setup Python
+              uses: actions/setup-python@v4
+              with:
+                  python-version: '3.9'
+            - name: Install Packages
+              run: pip install -r requirements.txt 
+            - name: Git Bisect to Find Bad Commit
+              env:
+                GOOD_COMMIT: e4cfc6f77ebbe2e23550ddab682316ab4ce1c03c # Replace with known good commit hash
+                BAD_COMMIT: c1a4be04b972b6c17db242fc37752ad517c29402  # Replace with known bad commit hash
+              run: |
+                # Start bisect and specify good/bad commits
+                git bisect start $BAD_COMMIT $GOOD_COMMIT
+                
+                # Define the test command to use during bisect
+                git bisect run python manage.py test
+                
+                # Capture the result of git bisect
+                RESULT=$(git bisect log | grep 'first bad commit' || echo 'No bad commit found')
+                
+                echo "Git bisect result: $RESULT"
+                git bisect reset
+            - name: Run tests
+              run: python manage.py test
