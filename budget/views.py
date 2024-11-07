@@ -19,7 +19,8 @@ def project_detail(request, project_slug):
         category_list = Category.objects.filter(project=project)
         return render(request, 'budget/project-detail.html', {'project': project, 'expense_list': project.expenses.all(), 'category_list': category_list})
 
-    elif request.method == 'PATCH':
+
+    elif request.method == 'POST':
         form = ExpenseForm(request.POST)
 
         if form.is_valid():
